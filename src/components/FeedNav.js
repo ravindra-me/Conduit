@@ -1,8 +1,10 @@
+import { useContext } from "react";
 import { NavLink } from "react-router-dom";
+import { Context } from "./LoginContext";
 
 export default function FeedNav(props) {
-  let { activeTab, emptyTab, isLogedInUser, user, yourFeedFn, activeTag } =
-    props;
+  let { activeTab, emptyTab, yourFeedFn, activeTag } = props;
+  let { isLogedInUser, user } = useContext(Context);
   return (
     <section>
       <div className="border-b-2  pb-2">

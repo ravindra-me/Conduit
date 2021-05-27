@@ -1,6 +1,7 @@
 import React from "react";
 import { articlesURL } from "../utils/constant";
 import { withRouter } from "react-router-dom";
+import { Context } from "./LoginContext";
 class ArticleEdit extends React.Component {
   state = {
     title: "",
@@ -13,6 +14,8 @@ class ArticleEdit extends React.Component {
       body: "",
     },
   };
+
+  static contextType = Context;
 
   componentDidMount() {
     fetch(articlesURL + `/${this.props.match.params.slug}`)
@@ -54,13 +57,14 @@ class ArticleEdit extends React.Component {
   };
 
   handleSubmit = (event) => {
+    const { user } = this.context;
     event.preventDefault();
     const { title, description, tagList, body } = this.state;
     const requestOptions = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        authorization: `Token ${this.props.user.token}`,
+        authorization: `Token ${user.token}`,
       },
       body: JSON.stringify({
         article: {

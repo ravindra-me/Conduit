@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import Footer from "./Footer";
 import Comment from "./Comment";
+import { Context } from "./LoginContext";
 
 function SingleArtiCont(props) {
   const { description, tagList, body } = props.article;
-
+  const { isLogedInUser } = useContext(Context);
   return (
     <section className="py-16">
       <div className="container">
@@ -24,10 +25,10 @@ function SingleArtiCont(props) {
             )}
           </ul>
         </div>
-        {props.isLogedInUser === false ? (
+        {isLogedInUser === false ? (
           <Footer />
         ) : (
-          <Comment article={props.article} user={props.user} />
+          <Comment article={props.article} />
         )}
       </div>
     </section>

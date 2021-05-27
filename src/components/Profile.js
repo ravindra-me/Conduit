@@ -4,6 +4,7 @@ import ProfileBanner from "./ProfileBanner";
 import { userProfile, articlesURL } from "../utils/constant";
 import Posts from "./Posts";
 import Loader from "./Loader";
+import { Context } from "./LoginContext";
 
 class Profile extends React.Component {
   state = {
@@ -13,6 +14,8 @@ class Profile extends React.Component {
     profile: null,
     params: this.props.match.params.username,
   };
+
+  static contextType = Context;
 
   componentDidMount() {
     this.fetchData();
@@ -73,11 +76,12 @@ class Profile extends React.Component {
     );
   };
 
-  handleFollow = (username, user) => {
+  handleFollow = (username, user1) => {
+    const { user } = this.context;
     const requestOptions = {
       method: "POST",
       headers: {
-        authorization: `Token ${this.props.user.token}`,
+        authorization: `Token ${user.token}`,
       },
     };
     fetch(userProfile + `/${username}/follow`, requestOptions)
@@ -97,11 +101,11 @@ class Profile extends React.Component {
   };
 
   favoriteArticle = (slug) => {
-    console.log(slug);
+    const { user } = this.context;
     fetch(articlesURL + `/${slug}/favorite`, {
       method: "POST",
       headers: {
-        authorization: `Token ${this.props.user.token}`,
+        authorization: `Token ${user.token}`,
       },
     })
       .then((res) => {
@@ -119,11 +123,11 @@ class Profile extends React.Component {
   };
 
   unFavoriteArticle = (slug) => {
-    console.log(slug, "unfav");
+    const { user } = this.context;
     fetch(articlesURL + `/${slug}/favorite`, {
       method: "DELETE",
       headers: {
-        authorization: `Token ${this.props.user.token}`,
+        authorization: `Token ${user.token}`,
       },
     })
       .then((res) => {
@@ -140,7 +144,7 @@ class Profile extends React.Component {
   };
 
   render() {
-    let { user } = this.props;
+    const { user } = this.context;
 
     if (!this.state.profile) {
       return <Loader />;

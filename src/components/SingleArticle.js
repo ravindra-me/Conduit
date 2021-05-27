@@ -5,7 +5,7 @@ import { articlesURL } from "../utils/constant";
 import Loader from "./Loader";
 import SingleHero from "./SignleHero";
 import SingleArtiCont from "./SingleArtiCont";
-
+import { LoginConsumer } from "./LoginContext";
 class SingleArticle extends React.Component {
   state = {
     article: null,
@@ -54,26 +54,26 @@ class SingleArticle extends React.Component {
 
   render() {
     let { article, error } = this.state;
-    let { isLogedInUser, user, editArticleFn } = this.props;
-    if (!article) {
-      return <Loader />;
-    }
+    let { editArticleFn } = this.props;
     return (
-      <>
-        <SingleHero
-          article={article}
-          error={error}
-          isLogedInUser={isLogedInUser}
-          user={user}
-          editArticleFn={editArticleFn}
-          handleDelete={this.handleDelete}
-        />
-        <SingleArtiCont
-          article={article}
-          isLogedInUser={isLogedInUser}
-          user={user}
-        />
-      </>
+      <LoginConsumer>
+        {({ isLogedInUser, user }) => {
+          if (!article) {
+            return <Loader />;
+          }
+          return (
+            <>
+              <SingleHero
+                article={article}
+                error={error}
+                editArticleFn={editArticleFn}
+                handleDelete={this.handleDelete}
+              />
+              <SingleArtiCont article={article} />
+            </>
+          );
+        }}
+      </LoginConsumer>
     );
   }
 }

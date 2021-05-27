@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Route, Switch } from "react-router-dom";
 import "../App.scss";
 import Header from "./Header";
@@ -16,6 +16,7 @@ import Setting from "./Setting";
 
 import Profile from "./Profile";
 import ArticleEdit from "./ArticleEdit";
+import { LoginProvider, Context } from "./LoginContext";
 
 class App extends React.Component {
   state = {
@@ -95,22 +96,46 @@ class App extends React.Component {
     return (
       <>
         <ErrorBoundary>
-          <Header user={user} isLogedInUser={isLogedInUser} />
+          <LoginProvider
+            value={{
+              isLogedInUser: isLogedInUser,
+              user: user,
+              logout: this.logout,
+              article: article,
+              editArticleFn: this.editArticleFn,
+            }}
+          >
+            <Header />
+          </LoginProvider>
         </ErrorBoundary>
         <Switch>
           <Route path="/" exact>
             <ErrorBoundary>
-              <Home user={user} isLogedInUser={isLogedInUser} />
+              <LoginProvider
+                value={{
+                  isLogedInUser: isLogedInUser,
+                  user: user,
+                  logout: this.logout,
+                  article: article,
+                  editArticleFn: this.editArticleFn,
+                }}
+              >
+                <Home />
+              </LoginProvider>
             </ErrorBoundary>
           </Route>
           {isLogedInUser ? (
-            <AuthanticatePage
-              isLogedInUser={isLogedInUser}
-              user={user}
-              logout={this.logout}
-              article={article}
-              editArticleFn={this.editArticleFn}
-            />
+            <LoginProvider
+              value={{
+                isLogedInUser: isLogedInUser,
+                user: user,
+                logout: this.logout,
+                article: article,
+                editArticleFn: this.editArticleFn,
+              }}
+            >
+              <AuthanticatePage />
+            </LoginProvider>
           ) : (
             <UnAuthanticatePage
               isLogedInUserFn={this.isLogedInUserFn}
@@ -123,29 +148,25 @@ class App extends React.Component {
   }
 }
 
-function AuthanticatePage(props) {
-  let { isLogedInUser, user, logout, editArticleFn, article } = props;
-  console.log(isLogedInUser);
+function AuthanticatePage() {
+  let { isLogedInUser, user, logout, editArticleFn, article } =
+    useContext(Context);
   return (
     <>
       <Switch>
         <Route path="/new-post">
           <ErrorBoundary>
-            <NewPost user={user} />
+            <NewPost />
           </ErrorBoundary>
         </Route>
         <Route path="/article/:slug">
           <ErrorBoundary>
-            <SingleArticle
-              isLogedInUser={isLogedInUser}
-              user={user}
-              editArticleFn={editArticleFn}
-            />
+            <SingleArticle editArticleFn={editArticleFn} />
           </ErrorBoundary>
         </Route>
         <Route path="/setting">
           <ErrorBoundary>
-            <Setting user={user} logout={logout} />
+            <Setting />
           </ErrorBoundary>
         </Route>
         <Route path="/profile/:username">
@@ -173,7 +194,7 @@ function UnAuthanticatePage(props) {
       <Switch>
         <Route path="/login">
           <ErrorBoundary>
-            <Login isLogedInUserFn={isLogedInUserFn} />
+            <Login />
           </ErrorBoundary>
         </Route>
         <Route path="/signup">

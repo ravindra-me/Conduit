@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { articlesURL } from "../utils/constant";
 import Loader from "./Loader";
+import { Context, LoginConsumer } from "./LoginContext";
 class Comment extends React.Component {
   state = {
     comments: null,
@@ -9,6 +10,8 @@ class Comment extends React.Component {
       comment: "",
     },
   };
+
+  static contextType = Context;
 
   componentWillMount() {
     this.fetchComment();
@@ -21,11 +24,12 @@ class Comment extends React.Component {
   }
 
   deleteComment = (slug, id) => {
+    const { user } = this.context;
     const requestOptions = {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        authorization: `Token ${this.props.user.token}`,
+        authorization: `Token ${user.token}`,
       },
     };
 
@@ -79,12 +83,13 @@ class Comment extends React.Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
+    const { user } = this.context;
     const { comment } = this.state;
     const requestOptions = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        authorization: `Token ${this.props.user.token}`,
+        authorization: `Token ${user.token}`,
       },
       body: JSON.stringify({
         comment: {
@@ -106,8 +111,8 @@ class Comment extends React.Component {
   };
 
   render() {
-    const { user, article } = this.props;
-
+    const { article } = this.props;
+    const { user } = this.context;
     if (!this.state.comments) {
       return <Loader />;
     }

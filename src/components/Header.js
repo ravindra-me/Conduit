@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { NavLink, Route, Link } from "react-router-dom";
+import { Context } from "./LoginContext";
 
 function Header(props) {
-  const { isLogedInUser, user, handleProfile } = props;
+  const { handleProfile } = props;
+  const { isLogedInUser, user } = useContext(Context);
   return (
     <header className="bg-gray-100">
       <div className="container flex justify-between items-center py-4">

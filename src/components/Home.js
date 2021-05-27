@@ -6,6 +6,7 @@ import Sidebar from "./Sidebar";
 import { articlesURL } from "../utils/constant";
 
 import Pagination from "./Pagination";
+import { Context } from "./LoginContext";
 class Home extends React.Component {
   state = {
     articles: null,
@@ -18,6 +19,7 @@ class Home extends React.Component {
     author: "",
   };
 
+  static contextType = Context;
   componentDidMount() {
     this.fetchData();
   }
@@ -96,10 +98,11 @@ class Home extends React.Component {
   };
 
   favoriteArticle = (slug) => {
+    const { user } = this.context;
     fetch(articlesURL + `/${slug}/favorite`, {
       method: "POST",
       headers: {
-        authorization: `Token ${this.props.user.token}`,
+        authorization: `Token ${user.token}`,
       },
     })
       .then((res) => {
@@ -116,10 +119,11 @@ class Home extends React.Component {
   };
 
   unFavoriteArticle = (slug) => {
+    const { user } = this.context;
     fetch(articlesURL + `/${slug}/favorite`, {
       method: "DELETE",
       headers: {
-        authorization: `Token ${this.props.user.token}`,
+        authorization: `Token ${user.token}`,
       },
     })
       .then((res) => {
@@ -144,7 +148,7 @@ class Home extends React.Component {
       activePageIndex,
       activeTag,
     } = this.state;
-    const { isLogedInUser, user } = this.props;
+
     return (
       <>
         <main>
@@ -155,8 +159,6 @@ class Home extends React.Component {
                 <FeedNav
                   activeTab={this.state.activeTab}
                   emptyTab={this.emptyTab}
-                  isLogedInUser={isLogedInUser}
-                  user={user}
                   yourFeedFn={this.yourFeedFn}
                   activeTag={activeTag}
                 />

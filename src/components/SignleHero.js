@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link, withRouter } from "react-router-dom";
+import { Context } from "./LoginContext";
 
 function SingleHero(props) {
   const { author, createdAt, title, slug } = props.article;
-  const { user, editArticleFn, article, handleDelete } = props;
-
+  const { editArticleFn, article, handleDelete } = props;
+  const { user } = useContext(Context);
   return (
     <>
       <section className="py-24 bg-black">

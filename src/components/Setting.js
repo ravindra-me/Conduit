@@ -1,13 +1,16 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { userUrl, localStorageUser } from "../utils/constant";
+import { Context } from "./LoginContext";
 class Setting extends React.Component {
+  static contextType = Context;
+
   state = {
-    username: this.props.user.username,
-    email: this.props.user.email,
-    bio: this.props.user.bio || "",
-    password: this.props.user.password || "",
-    image: this.props.user.image || "",
+    username: this.context.user.username,
+    email: this.context.user.email,
+    bio: this.context.user.bio || "",
+    password: this.context.user.password || "",
+    image: this.context.user.image || "",
     errors: {
       email: "",
       password: "",
@@ -66,6 +69,8 @@ class Setting extends React.Component {
 
   render() {
     const { username, email, bio, image, password } = this.state;
+    const { logout } = this.context;
+
     return (
       <>
         <section className="py-16">
@@ -132,7 +137,7 @@ class Setting extends React.Component {
             <button
               className="absolute top-0 right-0 bg-blue-200 px-4 py-2 rounded text-green-800 font-bold shadow-lg"
               onClick={() => {
-                this.props.logout();
+                logout();
                 this.props.history.push("/");
               }}
             >
