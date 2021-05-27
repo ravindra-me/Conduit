@@ -6,6 +6,7 @@ import Home from "./Home";
 import Login from "./Login";
 import SignUp from "./SignUp";
 import SingleArticle from "./SingleArticle";
+import ErrorBoundary from "./ErrorBoundary";
 
 import { localStorageUser, userUrl } from "../utils/constant";
 import NewPost from "./NewPost";
@@ -93,10 +94,14 @@ class App extends React.Component {
     }
     return (
       <>
-        <Header user={user} isLogedInUser={isLogedInUser} />
+        <ErrorBoundary>
+          <Header user={user} isLogedInUser={isLogedInUser} />
+        </ErrorBoundary>
         <Switch>
           <Route path="/" exact>
-            <Home user={user} isLogedInUser={isLogedInUser} />
+            <ErrorBoundary>
+              <Home user={user} isLogedInUser={isLogedInUser} />
+            </ErrorBoundary>
           </Route>
           {isLogedInUser ? (
             <AuthanticatePage
@@ -125,23 +130,33 @@ function AuthanticatePage(props) {
     <>
       <Switch>
         <Route path="/new-post">
-          <NewPost user={user} />
+          <ErrorBoundary>
+            <NewPost user={user} />
+          </ErrorBoundary>
         </Route>
         <Route path="/article/:slug">
-          <SingleArticle
-            isLogedInUser={isLogedInUser}
-            user={user}
-            editArticleFn={editArticleFn}
-          />
+          <ErrorBoundary>
+            <SingleArticle
+              isLogedInUser={isLogedInUser}
+              user={user}
+              editArticleFn={editArticleFn}
+            />
+          </ErrorBoundary>
         </Route>
         <Route path="/setting">
-          <Setting user={user} logout={logout} />
+          <ErrorBoundary>
+            <Setting user={user} logout={logout} />
+          </ErrorBoundary>
         </Route>
         <Route path="/profile/:username">
-          <Profile user={user} />
+          <ErrorBoundary>
+            <Profile user={user} />
+          </ErrorBoundary>
         </Route>
         <Route path="/editor/:slug">
-          <ArticleEdit article={article} user={user} />
+          <ErrorBoundary>
+            <ArticleEdit article={article} user={user} />
+          </ErrorBoundary>
         </Route>
         <Route path="*">
           <Nomatch />
@@ -157,19 +172,27 @@ function UnAuthanticatePage(props) {
     <>
       <Switch>
         <Route path="/login">
-          <Login isLogedInUserFn={isLogedInUserFn} />
+          <ErrorBoundary>
+            <Login isLogedInUserFn={isLogedInUserFn} />
+          </ErrorBoundary>
         </Route>
         <Route path="/signup">
-          <SignUp isLogedInUserFn={isLogedInUserFn} />
+          <ErrorBoundary>
+            <SignUp isLogedInUserFn={isLogedInUserFn} />
+          </ErrorBoundary>
         </Route>
         <Route path="/article/:slug">
-          <SingleArticle
-            isLogedInUserFn={isLogedInUserFn}
-            isLogedInUser={isLogedInUser}
-          />
+          <ErrorBoundary>
+            <SingleArticle
+              isLogedInUserFn={isLogedInUserFn}
+              isLogedInUser={isLogedInUser}
+            />
+          </ErrorBoundary>
         </Route>
         <Route path="/profile/:username">
-          <Profile />
+          <ErrorBoundary>
+            <Profile />
+          </ErrorBoundary>
         </Route>
         <Route path="*">
           <Nomatch />
