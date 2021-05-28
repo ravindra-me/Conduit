@@ -79,7 +79,7 @@ class Login extends React.Component {
 
   render() {
     let { email, password, errors } = this.state;
-    console.log(this.props);
+
     return (
       <section className="py-16">
         <div className="container flex justify-center items-center ">
